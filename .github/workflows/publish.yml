@@ -38,17 +38,8 @@ jobs:
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           gh release download "$TAG" --pattern 'kana-helper-*.zip'
           ls -lh kana-helper-*.zip
-      - name: Authenticate service account
-        id: service
-        if: env.CWS_SERVICE_ACCOUNT_JSON != ''
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.CWS_SERVICE_ACCOUNT_JSON }}
-          token_format: access_token
-          access_token_scopes: https://www.googleapis.com/auth/chromewebstore
-      - name: Authenticate OAuth refresh token
+      - name: Authenticate Chrome Web Store
         id: oauth
-        if: env.CWS_SERVICE_ACCOUNT_JSON == '' && env.CHROME_REFRESH_TOKEN != ''
         env:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
@@ -56,7 +47,7 @@ jobs:
         run: node scripts/chrome-token.mjs
       - name: Upload and submit for review
         env:
-          CHROME_ACCESS_TOKEN: ${{ steps.service.outputs.access_token || steps.oauth.outputs.access_token }}
+          CHROME_ACCESS_TOKEN: ${{ steps.oauth.outputs.access_token }}
           CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
           CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
         run: |

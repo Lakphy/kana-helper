@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: release-main
@@ -55,3 +56,11 @@ jobs:
             --target "${{ github.event.workflow_run.head_sha }}" \
             --title "Kana Helper ${TAG}" \
             --notes "Packaged extension for ${TAG}. The zip root is the extension. Readings stay on the device. See PRIVACY.md."
+      # Releases created with GITHUB_TOKEN do not trigger release-event workflows.
+      - name: Start store publishing
+        if: steps.package.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ steps.package.outputs.tag }}
+        run: gh workflow run publish.yml --ref main -f "tag=${RELEASE_TAG}"
