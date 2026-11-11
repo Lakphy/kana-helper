@@ -39,6 +39,7 @@
   "sizeNormal": { "message": "標準" },
   "sizeLarge": { "message": "大きめ" },
   "sizeHuge": { "message": "最大" },
+  "skipChinese": { "message": "中国語は除外" },
   "skipCode": { "message": "コードは除外" },
   "shortcut": {
     "message": "ショートカット $KEY$",

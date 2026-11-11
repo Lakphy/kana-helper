@@ -38,5 +38,7 @@ describe('font size', () => {
     expect(normalizeSettings({ language: 'ja' }).language).toBe('ja');
     expect(normalizeSettings({ language: 'zh-TW' }).language).toBe('zh-TW');
     expect(normalizeSettings({ language: 'esperanto' as 'en' }).language).toBe('auto');
+    expect(normalizeSettings({}).skipChinese).toBe(true);
+    expect(normalizeSettings({ skipChinese: false }).skipChinese).toBe(false);
   });
 });

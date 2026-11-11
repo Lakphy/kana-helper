@@ -14,6 +14,7 @@ export type AnnotateRequest = {
   id: number;
   script: KanaScript;
   scope: AnnotationScope;
+  skipChinese?: boolean;
   texts: string[];
 };
 

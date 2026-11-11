@@ -1,5 +1,5 @@
 import { DEFAULT_SETTINGS, normalizeSettings, type AnnotationScope, type KanaScript, type Settings } from './settings';
-import { hasJapanese } from './text';
+import { blockLooksChinese, hasJapanese } from './text';
 import type { AnnotateResponse, Piece } from './types';
 
 const SKIP_TAGS = new Set([
@@ -120,12 +120,29 @@ function blocked(element: Element): boolean {
   return false;
 }
 
+const BLOCK = 'p,li,h1,h2,h3,h4,h5,h6,td,th,figcaption,blockquote,dd,dt,caption,button,summary';
+
+function annotationContext(text: Text): string {
+  const value = text.nodeValue ?? '';
+  const parent = text.parentElement;
+  if (!parent) return value;
+  const block = parent.closest(BLOCK) ?? parent;
+  const context = block.textContent ?? value;
+  return context.length > 500 ? value : context;
+}
+
+function worthAnnotating(text: Text): boolean {
+  const value = text.nodeValue ?? '';
+  if (!hasJapanese(value)) return false;
+  return !(settings.skipChinese && blockLooksChinese(annotationContext(text)));
+}
+
 function directJapaneseText(element: Element): Text[] {
   const texts: Text[] = [];
   for (const node of element.childNodes) {
     if (node.nodeType !== Node.TEXT_NODE) continue;
     const text = node as Text;
-    if (!text.nodeValue || !hasJapanese(text.nodeValue)) continue;
+    if (!worthAnnotating(text)) continue;
     texts.push(text);
   }
   return texts;
@@ -164,7 +181,7 @@ function elementNearViewport(element: Element): boolean {
 
 function enqueue(text: Text): void {
   if (!pageActive() || queued.has(text) || !text.isConnected) return;
-  if (!text.nodeValue || !hasJapanese(text.nodeValue)) return;
+  if (!worthAnnotating(text)) return;
   if (text.parentElement?.closest('.jkh-root')) return;
   queued.add(text);
   queue.push(text);
@@ -175,7 +192,7 @@ function noteText(node: Node): void {
   const text = node as Text;
   const parent = text.parentElement;
   if (!parent || blocked(parent) || parent.closest('.jkh-root')) return;
-  if (!hasJapanese(text.nodeValue ?? '')) return;
+  if (!worthAnnotating(text)) return;
   const tall = parent.getBoundingClientRect().height > window.innerHeight * 1.7;
   if (tall ? textNearViewport(text) : elementNearViewport(parent)) enqueue(text);
   else observeParent(parent);
@@ -207,7 +224,7 @@ function scan(root: ParentNode): void {
         return NodeFilter.FILTER_SKIP;
       }
       const text = node as Text;
-      if (!text.nodeValue || !hasJapanese(text.nodeValue)) return NodeFilter.FILTER_REJECT;
+      if (!worthAnnotating(text)) return NodeFilter.FILTER_REJECT;
       const parent = text.parentElement;
       if (!parent || blocked(parent)) return NodeFilter.FILTER_REJECT;
       return NodeFilter.FILTER_ACCEPT;
@@ -292,7 +309,12 @@ function disconnectPort(): void {
   current?.disconnect();
 }
 
-function request(texts: string[], script: KanaScript, scope: AnnotationScope): Promise<AnnotateResponse> {
+function request(
+  texts: string[],
+  script: KanaScript,
+  scope: AnnotationScope,
+  skipChinese: boolean,
+): Promise<AnnotateResponse> {
   const id = ++sequence;
   const currentGeneration = generation;
   return new Promise((resolve, reject) => {
@@ -302,7 +324,7 @@ function request(texts: string[], script: KanaScript, scope: AnnotationScope): P
     }, 20_000);
     pending.set(id, { resolve, reject, generation: currentGeneration, timer });
     try {
-      connect().postMessage({ type: 'annotate', id, script, scope, texts });
+      connect().postMessage({ type: 'annotate', id, script, scope, skipChinese, texts });
     } catch (error) {
       window.clearTimeout(timer);
       pending.delete(id);
@@ -425,10 +447,9 @@ function takeBatch(): Text[] {
     if (!text) break;
     queued.delete(text);
     if (!text.isConnected || text.parentElement?.closest('.jkh-root')) continue;
-    const value = text.nodeValue ?? '';
-    if (!hasJapanese(value)) continue;
+    if (!worthAnnotating(text)) continue;
     batch.push(text);
-    chars += value.length;
+    chars += text.nodeValue?.length ?? 0;
   }
   return batch;
 }
@@ -454,10 +475,11 @@ async function annotateBatch(batch: Text[]): Promise<void> {
   const currentGeneration = generation;
   const script = settings.kanaScript;
   const scope = settings.scope;
+  const skipChinese = settings.skipChinese;
   const texts = batch.map((text) => text.nodeValue ?? '');
   let response: AnnotateResponse;
   try {
-    response = await request(texts, script, scope);
+    response = await request(texts, script, scope, skipChinese);
   } catch {
     if (currentGeneration === generation && pageActive()) retry(batch);
     return;
@@ -554,7 +576,8 @@ function applySettings(next: Settings): void {
     (willBeActive &&
       (settings.kanaScript !== next.kanaScript ||
         settings.scope !== next.scope ||
-        settings.skipCode !== next.skipCode));
+        settings.skipCode !== next.skipCode ||
+        settings.skipChinese !== next.skipChinese));
   settings = next;
   applyAppearance(next);
   reportBadge();
@@ -578,7 +601,7 @@ function applySettings(next: Settings): void {
 
 function onStorage(changes: Record<string, chrome.storage.StorageChange>, area: string): void {
   if (area !== 'local') return;
-  const watched = ['enabled', 'kanaScript', 'fontSize', 'mode', 'scope', 'color', 'opacity', 'skipCode', 'disabledHosts'];
+  const watched = ['enabled', 'kanaScript', 'fontSize', 'mode', 'scope', 'color', 'opacity', 'skipCode', 'skipChinese', 'disabledHosts'];
   if (!watched.some((key) => key in changes)) return;
   const patch: Partial<Settings> = {};
   if ('enabled' in changes) patch.enabled = changes.enabled.newValue as Settings['enabled'];
@@ -589,6 +612,7 @@ function onStorage(changes: Record<string, chrome.storage.StorageChange>, area: 
   if ('color' in changes) patch.color = changes.color.newValue as Settings['color'];
   if ('opacity' in changes) patch.opacity = changes.opacity.newValue as Settings['opacity'];
   if ('skipCode' in changes) patch.skipCode = changes.skipCode.newValue as Settings['skipCode'];
+  if ('skipChinese' in changes) patch.skipChinese = changes.skipChinese.newValue as Settings['skipChinese'];
   if ('disabledHosts' in changes) patch.disabledHosts = changes.disabledHosts.newValue as Settings['disabledHosts'];
   applySettings(normalizeSettings({ ...settings, ...patch }));
 }

@@ -15,6 +15,8 @@ export type Settings = {
   /** Annotation opacity as a percentage. Used when color is fade. */
   opacity: number;
   skipCode: boolean;
+  /** Leave Chinese prose unannotated. */
+  skipChinese: boolean;
   language: UiLanguage;
   disabledHosts: string[];
 };
@@ -36,6 +38,7 @@ export const DEFAULT_SETTINGS: Settings = {
   color: 'auto',
   opacity: 50,
   skipCode: false,
+  skipChinese: true,
   language: 'auto',
   disabledHosts: [],
 };
@@ -95,6 +98,7 @@ export function normalizeSettings(raw: Partial<Settings> | undefined): Settings 
     color: color && COLORS.has(color) ? color : DEFAULT_SETTINGS.color,
     opacity: normalizeOpacity(raw?.opacity),
     skipCode: typeof raw?.skipCode === 'boolean' ? raw.skipCode : DEFAULT_SETTINGS.skipCode,
+    skipChinese: typeof raw?.skipChinese === 'boolean' ? raw.skipChinese : DEFAULT_SETTINGS.skipChinese,
     language: language && LANGUAGES.has(language) ? language : DEFAULT_SETTINGS.language,
     disabledHosts: normalizeHosts(raw?.disabledHosts),
   };

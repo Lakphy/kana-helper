@@ -2,7 +2,7 @@ import { toHiragana, toKatakana, toRomaji } from 'wanakana';
 import { splitKanjiReading } from './kanji-split';
 import { alignMorae, morae } from './mora';
 import type { AnnotationScope, KanaScript } from './settings';
-import { hasJapanese } from './text';
+import { blockLooksChinese, hasJapanese, hasKana } from './text';
 import type { AnnotationColumn, Piece } from './types';
 
 export type ReadingToken = {
@@ -10,6 +10,7 @@ export type ReadingToken = {
   pos?: string;
   reading?: string;
   pronunciation?: string;
+  word_type?: string;
 };
 
 type Draft =
@@ -24,6 +25,7 @@ type Draft =
     };
 
 const CHUNK = 1600;
+const CHINESE_TOKEN = new Set(['是', '的', '了', '在', '都', '不', '没', '但', '与', '或', '被', '把', '就', '而', '你', '他', '她']);
 
 function isKanjiChar(ch: string): boolean {
   const code = ch.codePointAt(0) ?? 0;
@@ -380,11 +382,24 @@ function splitChunk(text: string, max: number): string[] {
   return parts;
 }
 
+function looksChinese(text: string, tokens: ReadingToken[]): boolean {
+  if (hasKana(text) || !hasKanji(text)) return false;
+  if (blockLooksChinese(text)) return true;
+  for (const token of tokens) {
+    const surface = token.surface_form ?? '';
+    if (!surface) continue;
+    if (CHINESE_TOKEN.has(surface)) return true;
+    if (token.word_type === 'UNKNOWN' && hasKanji(surface)) return true;
+  }
+  return false;
+}
+
 function annotateChunk(
   text: string,
   script: KanaScript,
   tokenize: (input: string) => ReadingToken[],
   scope: AnnotationScope,
+  skipChinese: boolean,
 ): Piece[] {
   let tokens: ReadingToken[];
   try {
@@ -392,6 +407,7 @@ function annotateChunk(
   } catch {
     return [{ kind: 'text', text }];
   }
+  if (skipChinese && looksChinese(text, tokens)) return [{ kind: 'text', text }];
   return annotateTokens(tokens, script, text, scope);
 }
 
@@ -412,11 +428,12 @@ export function annotateText(
   script: KanaScript,
   tokenize: (input: string) => ReadingToken[],
   scope: AnnotationScope = 'all',
+  skipChinese = true,
 ): Piece[] {
   if (!text) return [];
   if (!hasJapanese(text)) return [{ kind: 'text', text }];
   const parts = splitChunk(text, CHUNK);
-  const groups = parts.map((part) => annotateChunk(part, script, tokenize, scope));
+  const groups = parts.map((part) => annotateChunk(part, script, tokenize, scope, skipChinese));
   const pieces = groups.length === 1 ? groups[0] : concatPieces(groups);
   const flat = pieces.map((piece) => (piece.kind === 'text' ? piece.text : piece.base)).join('');
   return flat === text ? pieces : [{ kind: 'text', text }];

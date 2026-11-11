@@ -39,6 +39,7 @@
   "sizeNormal": { "message": "標準" },
   "sizeLarge": { "message": "較大" },
   "sizeHuge": { "message": "很大" },
+  "skipChinese": { "message": "不標註中文" },
   "skipCode": { "message": "不標註程式碼" },
   "shortcut": {
     "message": "快捷鍵 $KEY$",

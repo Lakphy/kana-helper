@@ -15,8 +15,13 @@ beforeAll(async () => {
   }).build();
 });
 
-function run(text: string, script: KanaScript = 'hiragana', scope: AnnotationScope = 'all'): Piece[] {
-  return annotateText(text, script, (value) => tokenizer.tokenize(value), scope);
+function run(
+  text: string,
+  script: KanaScript = 'hiragana',
+  scope: AnnotationScope = 'all',
+  skipChinese = true,
+): Piece[] {
+  return annotateText(text, script, (value) => tokenizer.tokenize(value), scope, skipChinese);
 }
 
 function flat(pieces: Piece[]): string {
@@ -101,6 +106,16 @@ describe('kuromoji readings', () => {
       expect(flat(run(sample)), sample).toBe(sample);
       expect(flat(run(sample, 'katakana')), sample).toBe(sample);
     }
+  });
+
+  it('leaves Chinese prose alone and still reads Japanese kanji', () => {
+    expect(rubies(run('我是中国人。今天天气很好'))).toEqual([]);
+    expect(rubies(run('这是一个中文句子'))).toEqual([]);
+    expect(rubies(run('汉字'))).toEqual([]);
+    expect(rubies(run('東京')).length).toBeGreaterThan(0);
+    expect(rubies(run('電光石火')).length).toBeGreaterThan(0);
+    expect(rubies(run('中国の首都は東京です')).some((item) => item.base.includes('東'))).toBe(true);
+    expect(rubies(run('我是中国人', 'hiragana', 'all', false)).length).toBeGreaterThan(0);
   });
 
   it('puts kana above kanji and romaji on every Japanese piece', () => {

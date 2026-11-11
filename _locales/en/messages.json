@@ -41,6 +41,7 @@
   "sizeNormal": { "message": "Standard" },
   "sizeLarge": { "message": "Large" },
   "sizeHuge": { "message": "Huge" },
+  "skipChinese": { "message": "Skip Chinese" },
   "skipCode": { "message": "Skip code" },
   "shortcut": {
     "message": "Shortcut $KEY$",

@@ -39,6 +39,7 @@
   "sizeNormal": { "message": "표준" },
   "sizeLarge": { "message": "크게" },
   "sizeHuge": { "message": "최대" },
+  "skipChinese": { "message": "중국어는 건너뛰기" },
   "skipCode": { "message": "코드는 건너뛰기" },
   "shortcut": {
     "message": "단축키 $KEY$",

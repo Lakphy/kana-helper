@@ -58,8 +58,14 @@ function remember(key: string, pieces: Piece[]): void {
   if (oldest) cache.delete(oldest);
 }
 
-function annotate(tokenizer: Analyzer, text: string, script: KanaScript, scope: AnnotationScope): Piece[] {
-  const key = `${script}\u0000${scope}\u0000${text}`;
+function annotate(
+  tokenizer: Analyzer,
+  text: string,
+  script: KanaScript,
+  scope: AnnotationScope,
+  skipChinese: boolean,
+): Piece[] {
+  const key = `${script}\u0000${scope}\u0000${skipChinese ? 1 : 0}\u0000${text}`;
   if (text.length <= 240) {
     const hit = cache.get(key);
     if (hit) {
@@ -68,7 +74,13 @@ function annotate(tokenizer: Analyzer, text: string, script: KanaScript, scope: 
       return hit;
     }
   }
-  const pieces = annotateText(text, script, (value) => tokenizer.tokenize(value) as IpadicFeatures[], scope);
+  const pieces = annotateText(
+    text,
+    script,
+    (value) => tokenizer.tokenize(value) as IpadicFeatures[],
+    scope,
+    skipChinese,
+  );
   if (text.length <= 240) remember(key, pieces);
   return pieces;
 }
@@ -88,7 +100,8 @@ chrome.runtime.onConnect.addListener((port) => {
       try {
         const tokenizer = await getTokenizer();
         const scope = message.scope === 'kanji' ? 'kanji' : 'all';
-        const pieces = message.texts.map((text) => annotate(tokenizer, String(text), message.script, scope));
+        const skipChinese = message.skipChinese !== false;
+        const pieces = message.texts.map((text) => annotate(tokenizer, String(text), message.script, scope, skipChinese));
         await reply({ type: 'annotate', id: message.id, pieces });
       } catch (error) {
         await reply({

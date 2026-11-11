@@ -22,6 +22,7 @@ const opacityRow = document.querySelector<HTMLElement>('#opacity-row');
 const opacityInput = document.querySelector<HTMLInputElement>('#opacity');
 const opacityLabel = document.querySelector<HTMLElement>('#opacity-label');
 const skipCodeInput = document.querySelector<HTMLInputElement>('#skip-code');
+const skipChineseInput = document.querySelector<HTMLInputElement>('#skip-chinese');
 const languageInput = document.querySelector<HTMLSelectElement>('#language');
 const status = document.querySelector<HTMLElement>('#status');
 const shortcut = document.querySelector<HTMLElement>('#shortcut');
@@ -63,6 +64,7 @@ function currentSettings(): Settings {
     color: color as AnnotationColor,
     opacity: Number(opacityInput?.value),
     skipCode: skipCodeInput?.checked ?? false,
+    skipChinese: skipChineseInput?.checked ?? true,
     language: (languageInput?.value ?? 'auto') as UiLanguage,
     disabledHosts: saved.disabledHosts,
   });
@@ -72,6 +74,7 @@ function applyForm(settings: Settings): void {
   saved = settings;
   if (enabledInput) enabledInput.checked = settings.enabled;
   if (skipCodeInput) skipCodeInput.checked = settings.skipCode;
+  if (skipChineseInput) skipChineseInput.checked = settings.skipChinese;
   selectRadio('kana', settings.kanaScript);
   selectRadio('mode', settings.mode);
   selectRadio('scope', settings.scope);
@@ -143,7 +146,7 @@ siteInput?.addEventListener('change', () => {
   save({ ...currentSettings(), disabledHosts: [...hosts] });
 });
 
-for (const input of document.querySelectorAll<HTMLInputElement>('input[type="radio"], #skip-code')) {
+for (const input of document.querySelectorAll<HTMLInputElement>('input[type="radio"], #skip-code, #skip-chinese')) {
   input.addEventListener('change', () => {
     const next = currentSettings();
     showOpacity(next);

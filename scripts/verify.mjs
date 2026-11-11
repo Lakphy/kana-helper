@@ -88,6 +88,7 @@ try {
       mainSelection: selection.toString().replace(/\s+/g, ''),
       linkReading: [...document.querySelectorAll('#link .jkh-unit')].map(read).join(''),
       englishRubies: document.querySelectorAll('#english .jkh-root').length,
+      chineseRubies: document.querySelectorAll('#chinese .jkh-unit').length,
       editorRubies: document.querySelectorAll('#editor .jkh-root').length,
       frozenRubies: document.querySelectorAll('#frozen .jkh-root').length,
       existingAnnotated: Boolean(document.querySelector('#existing .jkh-unit')),
@@ -111,6 +112,18 @@ try {
     `link reading: ${initial.linkReading}`,
   );
   check(initial.englishRubies === 0, 'english was annotated');
+  check(initial.chineseRubies === 0, 'chinese prose was annotated');
+  await page.evaluate(() => document.querySelector('#chinese').scrollIntoView({ block: 'center' }));
+  await worker.evaluate(() => chrome.storage.local.set({ skipChinese: false }));
+  await page.waitForSelector('#chinese .jkh-unit', { timeout: 10_000 });
+  await worker.evaluate(() => chrome.storage.local.set({ skipChinese: true }));
+  await page.evaluate(() => document.querySelector('#title').scrollIntoView({ block: 'center' }));
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll('#chinese .jkh-unit').length === 0 &&
+      document.querySelector('#title .jkh-read') !== null,
+    { timeout: 10_000 },
+  );
   check(initial.editorRubies === 0, 'contenteditable was annotated');
   check(initial.frozenRubies === 0, 'translate=no was annotated');
   check(!initial.existingAnnotated && initial.existingRt === 'かんじ', 'existing ruby was rewritten');
@@ -252,6 +265,7 @@ try {
       scope: document.querySelector('input[name="scope"]:checked')?.value ?? '',
       color: document.querySelector('input[name="color"]:checked')?.value ?? '',
       skipCode: document.querySelector('#skip-code').checked,
+      skipChinese: document.querySelector('#skip-chinese').checked,
       language: document.querySelector('#language').value,
       shortcut: document.querySelector('#shortcut').textContent,
       ui: chrome.i18n.getUILanguage(),
@@ -265,6 +279,7 @@ try {
   check(popupState.scope === 'all', `popup scope ${popupState.scope}`);
   check(popupState.color === 'auto', `popup color ${popupState.color}`);
   check(popupState.skipCode === false, 'skip code was on');
+  check(popupState.skipChinese === true, 'skip chinese was off');
   check(popupState.language === 'auto', `popup language ${popupState.language}`);
   check(popupState.shortcut.length > 0, `shortcut ${popupState.shortcut}`);
   check(popupState.fontSize === '72', `popup size ${popupState.fontSize}`);
