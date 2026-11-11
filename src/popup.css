@@ -1,0 +1,269 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fbfaf7;
+  --fg: #1d1c19;
+  --muted: #6f6a62;
+  --line: #e6e1d8;
+  --accent: #3142e0;
+  --chip: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1c1e;
+    --fg: #f4f2ed;
+    --muted: #b0aaa2;
+    --line: #343432;
+    --accent: #8d98ff;
+    --chip: #2a2a2c;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  width: 336px;
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.45 ui-sans-serif, system-ui, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px 4px;
+}
+
+header strong {
+  font-size: 14px;
+}
+
+#status {
+  max-width: 48%;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: end;
+}
+
+.lang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 14px;
+  padding: 8px 0 2px;
+}
+
+.lang select {
+  max-width: 58%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--chip);
+  color: var(--fg);
+  font: inherit;
+  padding: 4px 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 14px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+
+#site-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+section {
+  margin: 0 14px;
+  padding: 8px 0 2px;
+  border-top: 1px solid var(--line);
+}
+
+.label {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.segment {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+
+.segment label {
+  position: relative;
+  flex: 1;
+  padding: 6px 4px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+}
+
+.segment input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.segment label:has(input:checked) {
+  background: var(--accent);
+  color: white;
+}
+
+.segment label:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.colors label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.colors input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fg) 20%, transparent);
+}
+
+.dot.auto {
+  background: linear-gradient(135deg, #222 50%, #e8e4dc 50%);
+}
+
+.dot.fade {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--fg) 72%, transparent), color-mix(in srgb, var(--fg) 18%, transparent));
+}
+
+.dot.blue {
+  background: #3156d4;
+}
+
+.dot.green {
+  background: #0d7a4f;
+}
+
+.dot.orange {
+  background: #c45c12;
+}
+
+.colors label:has(input:checked) {
+  color: var(--fg);
+}
+
+.colors label:has(input:checked) .dot {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.opacity {
+  margin-top: 8px;
+}
+
+.opacity[hidden] {
+  display: none;
+}
+
+.size {
+  margin: 0 14px;
+  padding: 8px 0 2px;
+  border-top: 1px solid var(--line);
+}
+
+.size-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+#size-label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+input[type='range'] {
+  width: 100%;
+  margin: 0;
+}
+
+input {
+  accent-color: var(--accent);
+  margin: 0;
+}
+
+.footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 14px;
+  padding-top: 8px;
+}
+
+.meta,
+.hint {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+button {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.hint {
+  margin: 6px 14px 14px;
+}

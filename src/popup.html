@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kana Helper</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <strong id="app-name">Kana Helper</strong>
+      <span id="status"></span>
+    </header>
+    <label class="lang">
+      <span data-i18n="sectionLanguage">Language</span>
+      <select id="language" data-i18n-label="sectionLanguage" aria-label="Language">
+        <option value="auto" data-i18n="languageAuto">Follow the browser</option>
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+        <option value="zh-CN">简体中文</option>
+        <option value="zh-TW">繁體中文</option>
+        <option value="ko">한국어</option>
+      </select>
+    </label>
+    <label class="row">
+      <input id="enabled" type="checkbox" />
+      <span data-i18n="enabledAll">Show on all sites</span>
+    </label>
+    <label class="row" id="site-row" hidden>
+      <input id="site" type="checkbox" />
+      <span id="site-label" data-i18n="siteHere">On this site</span>
+    </label>
+
+    <section>
+      <p class="label" data-i18n="sectionDisplay">Show</p>
+      <div class="segment" role="radiogroup" data-i18n-label="ariaDisplay" aria-label="What to show">
+        <label><input type="radio" name="mode" value="both" /><span data-i18n="modeAll">All</span></label>
+        <label><input type="radio" name="mode" value="kana" /><span data-i18n="modeKana">Kana</span></label>
+        <label><input type="radio" name="mode" value="romaji" /><span data-i18n="modeRomaji">Romaji</span></label>
+      </div>
+    </section>
+    <section>
+      <p class="label" data-i18n="sectionScope">Scope</p>
+      <div class="segment" role="radiogroup" data-i18n-label="ariaScope" aria-label="What to annotate">
+        <label><input type="radio" name="scope" value="all" /><span data-i18n="scopeAll">All Japanese</span></label>
+        <label><input type="radio" name="scope" value="kanji" /><span data-i18n="scopeKanji">Kanji only</span></label>
+      </div>
+    </section>
+    <section>
+      <p class="label" data-i18n="sectionKana">Kana above kanji</p>
+      <div class="segment" role="radiogroup" data-i18n-label="ariaKana" aria-label="Kana script">
+        <label><input type="radio" name="kana" value="hiragana" /><span data-i18n="hiragana">Hiragana</span></label>
+        <label><input type="radio" name="kana" value="katakana" /><span data-i18n="katakana">Katakana</span></label>
+      </div>
+    </section>
+    <section>
+      <p class="label" data-i18n="sectionColor">Color</p>
+      <div class="colors" role="radiogroup" data-i18n-label="ariaColor" aria-label="Annotation color">
+        <label data-i18n-title="colorAutoTitle" title="Follow the text color"><input type="radio" name="color" value="auto" /><i class="dot auto"></i><span data-i18n="colorAuto">Auto</span></label>
+        <label data-i18n-title="colorFadeTitle" title="Keep the original color and lower its strength"><input type="radio" name="color" value="fade" /><i class="dot fade"></i><span data-i18n="colorFade">Fade</span></label>
+        <label data-i18n-title="colorBlueTitle" title="Blue"><input type="radio" name="color" value="blue" /><i class="dot blue"></i><span data-i18n="colorBlue">Blue</span></label>
+        <label data-i18n-title="colorGreenTitle" title="Green"><input type="radio" name="color" value="green" /><i class="dot green"></i><span data-i18n="colorGreen">Green</span></label>
+        <label data-i18n-title="colorOrangeTitle" title="Orange"><input type="radio" name="color" value="orange" /><i class="dot orange"></i><span data-i18n="colorOrange">Orange</span></label>
+      </div>
+      <div class="opacity" id="opacity-row" hidden>
+        <div class="size-head">
+          <span data-i18n="opacity">Opacity</span>
+          <span id="opacity-label">50%</span>
+        </div>
+        <input id="opacity" type="range" min="20" max="80" step="5" value="50" data-i18n-label="ariaOpacity" aria-label="Annotation opacity" />
+      </div>
+    </section>
+
+    <div class="size">
+      <div class="size-head">
+        <span data-i18n="size">Size</span>
+        <span id="size-label">Standard 48%</span>
+      </div>
+      <input id="font-size" type="range" min="32" max="80" step="4" value="48" data-i18n-label="ariaSize" aria-label="Annotation size" />
+    </div>
+    <label class="row">
+      <input id="skip-code" type="checkbox" />
+      <span data-i18n="skipCode">Skip code</span>
+    </label>
+    <div class="footer">
+      <p class="meta" id="shortcut"></p>
+      <button id="reset" type="button" data-i18n="reset">Reset</button>
+    </div>
+    <p class="hint" data-i18n="hint">Readings are made on this device. Page text is never uploaded. Refresh open pages after an update.</p>
+    <script src="popup.js"></script>
+  </body>
+</html>

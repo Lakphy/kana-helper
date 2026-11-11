@@ -1,0 +1,67 @@
+{
+  "description": {
+    "message": "Show kana and romaji above Japanese on any page. Per-site switch, kanji only, and processing stays on your device."
+  },
+  "commandToggle": {
+    "message": "Turn Kana Helper on or off"
+  },
+  "sectionLanguage": { "message": "Language" },
+  "languageAuto": { "message": "Follow the browser" },
+  "enabledAll": { "message": "Show on all sites" },
+  "siteHost": {
+    "message": "On $HOST$",
+    "placeholders": { "host": { "content": "$1", "example": "example.com" } }
+  },
+  "siteHere": { "message": "On this site" },
+  "sectionDisplay": { "message": "Show" },
+  "modeAll": { "message": "All" },
+  "modeKana": { "message": "Kana" },
+  "modeRomaji": { "message": "Romaji" },
+  "sectionScope": { "message": "Scope" },
+  "scopeAll": { "message": "All Japanese" },
+  "scopeKanji": { "message": "Kanji only" },
+  "sectionKana": { "message": "Kana above kanji" },
+  "hiragana": { "message": "Hiragana" },
+  "katakana": { "message": "Katakana" },
+  "sectionColor": { "message": "Color" },
+  "colorAuto": { "message": "Auto" },
+  "colorFade": { "message": "Fade" },
+  "colorBlue": { "message": "Blue" },
+  "colorGreen": { "message": "Green" },
+  "colorOrange": { "message": "Orange" },
+  "colorAutoTitle": { "message": "Follow the text color" },
+  "colorFadeTitle": { "message": "Keep the original color and lower its strength" },
+  "colorBlueTitle": { "message": "Blue" },
+  "colorGreenTitle": { "message": "Green" },
+  "colorOrangeTitle": { "message": "Orange" },
+  "opacity": { "message": "Opacity" },
+  "size": { "message": "Size" },
+  "sizeTiny": { "message": "Tiny" },
+  "sizeSmall": { "message": "Small" },
+  "sizeNormal": { "message": "Standard" },
+  "sizeLarge": { "message": "Large" },
+  "sizeHuge": { "message": "Huge" },
+  "skipCode": { "message": "Skip code" },
+  "shortcut": {
+    "message": "Shortcut $KEY$",
+    "placeholders": { "key": { "content": "$1", "example": "Alt+Shift+J" } }
+  },
+  "shortcutMissing": { "message": "Add a shortcut in extension settings" },
+  "reset": { "message": "Reset" },
+  "hint": {
+    "message": "Readings are made on this device. Page text is never uploaded. Refresh open pages after an update."
+  },
+  "statusError": { "message": "Dictionary failed" },
+  "statusReady": { "message": "Dictionary ready" },
+  "statusLoading": { "message": "Loading dictionary" },
+  "statusIdle": { "message": "Loads when Japanese appears" },
+  "titleOff": { "message": "Kana Helper is off" },
+  "titleHiragana": { "message": "Kana Helper · Hiragana" },
+  "titleKatakana": { "message": "Kana Helper · Katakana" },
+  "ariaDisplay": { "message": "What to show" },
+  "ariaScope": { "message": "What to annotate" },
+  "ariaKana": { "message": "Kana script" },
+  "ariaColor": { "message": "Annotation color" },
+  "ariaOpacity": { "message": "Annotation opacity" },
+  "ariaSize": { "message": "Annotation size" }
+}

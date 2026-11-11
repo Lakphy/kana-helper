@@ -1,0 +1,120 @@
+span.jkh-root {
+  display: inline !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  position: static !important;
+  float: none !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  line-height: inherit !important;
+  font: inherit !important;
+  color: inherit !important;
+  letter-spacing: inherit !important;
+  text-indent: 0 !important;
+  vertical-align: baseline !important;
+  white-space: inherit !important;
+  text-decoration: inherit !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+span.jkh-unit {
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  position: static !important;
+  float: none !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  line-height: 1 !important;
+  font: inherit !important;
+  color: inherit !important;
+  letter-spacing: inherit !important;
+  text-align: center !important;
+  text-indent: 0 !important;
+  vertical-align: baseline !important;
+  white-space: nowrap !important;
+  text-decoration: inherit !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+span.jkh-read {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-end !important;
+  width: max-content !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-size: var(--jkh-size, 0.48em) !important;
+  line-height: 1.05 !important;
+  font-weight: 500 !important;
+  font-style: normal !important;
+  font-family: inherit !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  white-space: nowrap !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  pointer-events: none !important;
+  color: color-mix(in srgb, currentColor 68%, transparent) !important;
+}
+
+span.jkh-m {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 0.03em !important;
+  line-height: 1.05 !important;
+  font: inherit !important;
+  font-weight: inherit !important;
+  color: inherit !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+html[data-jkh-mode='kana'] span.jkh-r {
+  display: none !important;
+}
+
+html[data-jkh-mode='romaji'] span.jkh-k {
+  display: none !important;
+}
+
+html[data-jkh-color='fade'] span.jkh-read {
+  color: currentColor !important;
+  opacity: var(--jkh-opacity, 0.5) !important;
+}
+
+html[data-jkh-color='blue'] span.jkh-read {
+  color: #3156d4 !important;
+}
+
+html[data-jkh-color='green'] span.jkh-read {
+  color: #0d7a4f !important;
+}
+
+html[data-jkh-color='orange'] span.jkh-read {
+  color: #c45c12 !important;
+}

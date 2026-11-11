@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Kana Helper fixture</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 28px 32px 80px;
+        font: 20px/1.75 "Hiragino Sans", sans-serif;
+        background: #f7f6f3;
+        color: #221f1c;
+      }
+      h1 { font-size: 28px; margin: 0 0 8px; }
+      .lead { margin-top: 0; color: #5c564e; }
+      a { color: inherit; }
+      .dark {
+        margin-top: 20px;
+        padding: 12px 16px;
+        background: #161616;
+        color: #f3f3f3;
+      }
+      .vert {
+        writing-mode: vertical-rl;
+        height: 240px;
+        margin-top: 16px;
+        border: 1px solid #ddd;
+        padding: 10px;
+      }
+      .spacer { height: 1400px; }
+      input, textarea { font: inherit; }
+      #editor { min-height: 1.5em; border: 1px dashed #bbb; padding: 4px 8px; }
+      #live { min-height: 1.5em; }
+      #shadow-host { display: block; margin-top: 8px; }
+    </style>
+  </head>
+  <body>
+    <h1 id="title">私は学生です</h1>
+    <p id="headline">『YOASOBI ARENA TOUR 2023「電光石火」』より「アイドル」ライブ映像がYouTube再生数1億回を突破！</p>
+    <p class="lead" id="main">
+      今日はいい天気なので、<a id="link" href="#tokyo">東京</a>へ行って食べ物を食べます。コーヒーをください。
+    </p>
+    <p id="english">This paragraph is English and should stay untouched.</p>
+    <p>
+      <input id="field" value="入力しない" />
+      <textarea id="area">テキストエリア</textarea>
+    </p>
+    <div id="editor" contenteditable="true">ここは編集中</div>
+    <p id="frozen" translate="no">翻訳しない漢字</p>
+    <p>既存のルビ：<ruby id="existing">漢字<rt>かんじ</rt></ruby></p>
+    <div class="dark" id="dark">暗色の漢字とカタカナ</div>
+    <div class="vert" id="vert">私は東京に行きます。</div>
+    <div id="shadow-host"></div>
+    <p id="live">明日</p>
+    <button id="swap" type="button">入れ替え</button>
+    <iframe id="frame" src="frame.html" title="frame"></iframe>
+    <div class="spacer"></div>
+    <p id="below">画面の外の文章です。</p>
+    <script>
+      const host = document.getElementById('shadow-host');
+      const shadow = host.attachShadow({ mode: 'open' });
+      shadow.innerHTML = '<p id="inside">影の中の日本語</p>';
+      document.getElementById('swap').addEventListener('click', () => {
+        document.getElementById('live').textContent = '昨日は雨でした';
+      });
+    </script>
+  </body>
+</html>

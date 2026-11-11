@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://codeberg.org/foss-extensions/registry/raw/branch/main/extension.schema.json
+id: kana-helper
+name: Kana Helper
+source_repo: https://github.com/Lakphy/kana-helper
+source_tag_pattern: "v*"
+developer: Lakphy
+developer_email: lakphy@outlook.com
+description: Show kana and romaji above Japanese text. Readings stay on the device.
+homepage_url: https://github.com/Lakphy/kana-helper
+icon_url: https://github.com/Lakphy/kana-helper/raw/main/icons/icon128.png
+license: MIT
+build:
+  node_version: "22"
+  browsers:
+    chromium:
+      command: npm ci && npm run build
+      dist_dir: dist
+      manifest_path: dist/manifest.json
